@@ -37,7 +37,7 @@
     },
     "VpcId": {
       "Description": "The VPC Id",
-      "Type": "String"
+      "Type": "AWS::EC2::VPC::Id"
     },
     "DNSHostedZone": {
       "Description": "The name of the Route53 private DNS zone (example.com.).",
@@ -59,7 +59,7 @@
     },
     "ServerOneSubnet": {
       "Description": "The designated subnet id for server one.",
-      "Type": "String"
+      "Type": "AWS::EC2::Subnet::Id"
     },
     "ServerTwoName": {
       "Description": "The name of the second server in the cluster",
@@ -72,7 +72,7 @@
     },
     "ServerTwoSubnet": {
       "Description": "The designated subnet id for server two.",
-      "Type": "String"
+      "Type": "AWS::EC2::Subnet::Id"
     },
     "ServerThreeName": {
       "Description": "The name of the third server in the cluster",
@@ -85,7 +85,7 @@
     },
     "ServerThreeSubnet": {
       "Description": "The designated subnet id for server three.",
-      "Type": "String"
+      "Type": "AWS::EC2::Subnet::Id"
     },
     "Workers": {
       "Description": "The initial number of worker or minions",
