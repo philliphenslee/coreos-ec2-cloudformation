@@ -16,9 +16,9 @@ CoreOS provides excellent documentation, and you can get up and running quickly 
 
 ### Using the template
 
-'''shell
+```shell
 git clone https://github.com/philliphenslee/coreos-ec2-cloudformation.git
-'''
+```
 
 ![template](http://ph2.us/github/coreos-ec2-cloudformation/aws-coreos-designer.png)
 
