@@ -1,0 +1,871 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Parameters": {
+    "InstanceType": {
+      "Description": "EC2 HVM instance type (m3.medium, etc).",
+      "Type": "String",
+      "Default": "t2.micro",
+      "AllowedValues": [
+        "t2.micro",
+        "m3.medium",
+        "m3.large",
+        "m3.xlarge",
+        "m3.2xlarge",
+        "c3.large",
+        "c3.xlarge",
+        "c3.2xlarge",
+        "c3.4xlarge",
+        "c3.8xlarge",
+        "cc2.8xlarge",
+        "cr1.8xlarge",
+        "hi1.4xlarge",
+        "hs1.8xlarge",
+        "i2.xlarge",
+        "i2.2xlarge",
+        "i2.4xlarge",
+        "i2.8xlarge",
+        "r3.large",
+        "r3.xlarge",
+        "r3.2xlarge",
+        "r3.4xlarge",
+        "r3.8xlarge",
+        "t2.micro",
+        "t2.small",
+        "t2.medium"
+      ],
+      "ConstraintDescription": "Must be a valid EC2 HVM instance type."
+    },
+    "VpcId": {
+      "Description": "The VPC Id",
+      "Type": "String"
+    },
+    "DNSHostedZone": {
+      "Description": "The name of the Route53 private DNS zone (example.com.).",
+      "Type": "String"
+    },
+    "KeyPair": {
+      "Default": "your-key-pair",
+      "Description": "The name of an EC2 Key Pair to allow SSH access to the instance.",
+      "Type": "String"
+    },
+    "ServerOneName": {
+      "Description": "The name of the first server in the cluster",
+      "Type": "String",
+      "Default": "etcd1"
+    },
+    "ServerOneIPAddress": {
+      "Description": "The static IP address of server one.",
+      "Type": "String"
+    },
+    "ServerOneSubnet": {
+      "Description": "The designated subnet id for server one.",
+      "Type": "String"
+    },
+    "ServerTwoName": {
+      "Description": "The name of the second server in the cluster",
+      "Type": "String",
+      "Default": "etcd2"
+    },
+    "ServerTwoIPAddress": {
+      "Description": "The static IP address of server two.",
+      "Type": "String"
+    },
+    "ServerTwoSubnet": {
+      "Description": "The designated subnet id for server two.",
+      "Type": "String"
+    },
+    "ServerThreeName": {
+      "Description": "The name of the third server in the cluster",
+      "Type": "String",
+      "Default": "etcd3"
+    },
+    "ServerThreeIPAddress": {
+      "Description": "The static IP address of server three.",
+      "Type": "String"
+    },
+    "ServerThreeSubnet": {
+      "Description": "The designated subnet id for server three.",
+      "Type": "String"
+    },
+    "Workers": {
+      "Description": "The initial number of worker or minions",
+      "Type": "String"
+    },
+    "AllowSSHFrom": {
+      "Description": "The net block (CIDR) that SSH is available to.",
+      "Default": "0.0.0.0/0",
+      "Type": "String"
+    }
+  },
+  "Mappings": {
+    "RegionMap": {
+      "eu-central-1": {
+        "AMI": "ami-fdd4c791"
+      },
+      "ap-northeast-1": {
+        "AMI": "ami-84e0c7ea"
+      },
+      "sa-east-1": {
+        "AMI": "ami-154af179"
+      },
+      "ap-southeast-2": {
+        "AMI": "ami-f35b0590"
+      },
+      "ap-southeast-1": {
+        "AMI": "ami-da67a0b9"
+      },
+      "us-east-1": {
+        "AMI": "ami-37bdc15d"
+      },
+      "us-west-2": {
+        "AMI": "ami-00ebfc61"
+      },
+      "us-west-1": {
+        "AMI": "ami-27553a47"
+      },
+      "eu-west-1": {
+        "AMI": "ami-55d20b26"
+      }
+    }
+  },
+  "Resources": {
+    "ServerOne": {
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "InstanceType": {
+          "Ref": "InstanceType"
+        },
+        "ImageId": {
+          "Fn::FindInMap": [
+            "RegionMap",
+            {
+              "Ref": "AWS::Region"
+            },
+            "AMI"
+          ]
+        },
+        "KeyName": {
+          "Ref": "KeyPair"
+        },
+        "PrivateIpAddress": {
+          "Ref": "ServerOneIPAddress"
+        },
+        "SubnetId": {
+          "Ref": "ServerOneSubnet"
+        },
+        "SecurityGroupIds": [
+          {
+            "Fn::GetAtt": [
+              "CoreOSClusterSG",
+              "GroupId"
+            ]
+          }
+        ],
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Ref": "ServerOneName"
+                  },
+                  ".",
+                  {
+                    "Ref": "DNSHostedZone"
+                  }
+                ]
+              ]
+            }
+          }
+        ],
+        "UserData": {
+          "Fn::Base64": {
+            "Fn::Join": [
+              "",
+              [
+                "#cloud-config\n\n",
+                "coreos:\n",
+                "  etcd2:\n",
+                "    name: ",
+                {
+                  "Ref": "ServerOneName"
+                },
+                "\n",
+                "    discovery-srv: ",
+                {
+                  "Ref": "DNSHostedZone"
+                },
+                "\n",
+                "    advertise-client-urls: http://",
+                {
+                  "Ref": "ServerOneName"
+                },
+                ".",
+                {
+                  "Ref": "DNSHostedZone"
+                },
+                ":2379\n",
+                "    initial-advertise-peer-urls: http://",
+                {
+                  "Ref": "ServerOneName"
+                },
+                ".",
+                {
+                  "Ref": "DNSHostedZone"
+                },
+                ":2380\n",
+                "    initial-cluster-token: ",
+                {
+                  "Ref": "AWS::StackName"
+                },
+                "\n    initial-cluster-state: new\n",
+                "    listen-client-urls: http://0.0.0.0:2379,http://0.0.0.0:4001\n",
+                "    listen-peer-urls: http://",
+                {
+                  "Ref": "ServerOneName"
+                },
+                ".",
+                {
+                  "Ref": "DNSHostedZone"
+                },
+                ":2380\n",
+                "  fleet:\n",
+                "    metadata: \"role=services\"\n",
+                "    etcd_servers: http://127.0.0.1:2379\n",
+                "  units:\n",
+                "    - name: etcd2.service\n",
+                "      command: start\n",
+                "    - name: fleet.service\n",
+                "      command: start\n"
+              ]
+            ]
+          }
+        }
+      },
+      "DependsOn": [
+        "etcdSRVRecord",
+        "ServerOneARecord",
+        "ServerTwoARecord",
+        "ServerThreeARecord"
+      ]
+    },
+    "ServerTwo": {
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "InstanceType": {
+          "Ref": "InstanceType"
+        },
+        "ImageId": {
+          "Fn::FindInMap": [
+            "RegionMap",
+            {
+              "Ref": "AWS::Region"
+            },
+            "AMI"
+          ]
+        },
+        "KeyName": {
+          "Ref": "KeyPair"
+        },
+        "PrivateIpAddress": {
+          "Ref": "ServerTwoIPAddress"
+        },
+        "SubnetId": {
+          "Ref": "ServerTwoSubnet"
+        },
+        "SecurityGroupIds": [
+          {
+            "Fn::GetAtt": [
+              "CoreOSClusterSG",
+              "GroupId"
+            ]
+          }
+        ],
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Ref": "ServerTwoName"
+                  },
+                  ".",
+                  {
+                    "Ref": "DNSHostedZone"
+                  }
+                ]
+              ]
+            }
+          }
+        ],
+        "UserData": {
+          "Fn::Base64": {
+            "Fn::Join": [
+              "",
+              [
+                "#cloud-config\n\n",
+                "coreos:\n",
+                "  etcd2:\n",
+                "    name: ",
+                {
+                  "Ref": "ServerTwoName"
+                },
+                "\n",
+                "    discovery-srv: ",
+                {
+                  "Ref": "DNSHostedZone"
+                },
+                "\n",
+                "    advertise-client-urls: http://",
+                {
+                  "Ref": "ServerTwoName"
+                },
+                ".",
+                {
+                  "Ref": "DNSHostedZone"
+                },
+                ":2379\n",
+                "    initial-cluster-token: ",
+                {
+                  "Ref": "AWS::StackName"
+                },
+                "\n    initial-cluster-state: new\n",
+                "    initial-advertise-peer-urls: http://",
+                {
+                  "Ref": "ServerTwoName"
+                },
+                ".",
+                {
+                  "Ref": "DNSHostedZone"
+                },
+                ":2380\n",
+                "    listen-client-urls: http://0.0.0.0:2379,http://0.0.0.0:4001\n",
+                "    listen-peer-urls: http://",
+                {
+                  "Ref": "ServerTwoName"
+                },
+                ".",
+                {
+                  "Ref": "DNSHostedZone"
+                },
+                ":2380\n",
+                "  fleet:\n",
+                "    metadata: \"role=services\"\n",
+                "    etcd_servers: http://127.0.0.1:2379\n",
+                "  units:\n",
+                "    - name: etcd2.service\n",
+                "      command: start\n",
+                "    - name: fleet.service\n",
+                "      command: start\n"
+              ]
+            ]
+          }
+        }
+      },
+      "DependsOn": [
+        "etcdSRVRecord",
+        "ServerOneARecord",
+        "ServerTwoARecord",
+        "ServerThreeARecord"
+      ]
+    },
+    "ServerThree": {
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "InstanceType": {
+          "Ref": "InstanceType"
+        },
+        "ImageId": {
+          "Fn::FindInMap": [
+            "RegionMap",
+            {
+              "Ref": "AWS::Region"
+            },
+            "AMI"
+          ]
+        },
+        "KeyName": {
+          "Ref": "KeyPair"
+        },
+        "PrivateIpAddress": {
+          "Ref": "ServerThreeIPAddress"
+        },
+        "SubnetId": {
+          "Ref": "ServerThreeSubnet"
+        },
+        "SecurityGroupIds": [
+          {
+            "Fn::GetAtt": [
+              "CoreOSClusterSG",
+              "GroupId"
+            ]
+          }
+        ],
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Ref": "ServerThreeName"
+                  },
+                  ".",
+                  {
+                    "Ref": "DNSHostedZone"
+                  }
+                ]
+              ]
+            }
+          }
+        ],
+        "UserData": {
+          "Fn::Base64": {
+            "Fn::Join": [
+              "",
+              [
+                "#cloud-config\n\n",
+                "coreos:\n",
+                "  etcd2:\n",
+                "    name: ",
+                {
+                  "Ref": "ServerThreeName"
+                },
+                "\n",
+                "    discovery-srv: ",
+                {
+                  "Ref": "DNSHostedZone"
+                },
+                "\n",
+                "    advertise-client-urls: http://",
+                {
+                  "Ref": "ServerThreeName"
+                },
+                ".",
+                {
+                  "Ref": "DNSHostedZone"
+                },
+                ":2379\n",
+                "    initial-cluster-token: ",
+                {
+                  "Ref": "AWS::StackName"
+                },
+                "\n    initial-cluster-state: new\n",
+                "    initial-advertise-peer-urls: http://",
+                {
+                  "Ref": "ServerThreeName"
+                },
+                ".",
+                {
+                  "Ref": "DNSHostedZone"
+                },
+                ":2380\n",
+                "    listen-client-urls: http://0.0.0.0:2379,http://0.0.0.0:4001\n",
+                "    listen-peer-urls: http://",
+                {
+                  "Ref": "ServerThreeName"
+                },
+                ".",
+                {
+                  "Ref": "DNSHostedZone"
+                },
+                ":2380\n",
+                "  fleet:\n",
+                "    metadata: \"role=services\"\n",
+                "    etcd_servers: http://127.0.0.1:2379\n",
+                "  units:\n",
+                "    - name: etcd2.service\n",
+                "      command: start\n",
+                "    - name: fleet.service\n",
+                "      command: start\n"
+              ]
+            ]
+          }
+        }
+      },
+      "DependsOn": [
+        "etcdSRVRecord",
+        "ServerOneARecord",
+        "ServerTwoARecord",
+        "ServerThreeARecord"
+      ]
+    },
+    "CoreOSClusterSG": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "VpcId": {
+          "Ref": "VpcId"
+        },
+        "GroupDescription": "CoreOS Cluster SecurityGroup",
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "22",
+            "ToPort": "22",
+            "CidrIp": {
+              "Ref": "AllowSSHFrom"
+            }
+          }
+        ]
+      }
+    },
+    "IngressICMP": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Fn::GetAtt": [
+            "CoreOSClusterSG",
+            "GroupId"
+          ]
+        },
+        "IpProtocol": "icmp",
+        "FromPort": "8",
+        "ToPort": "-1",
+        "SourceSecurityGroupId": {
+          "Fn::GetAtt": [
+            "CoreOSClusterSG",
+            "GroupId"
+          ]
+        }
+      },
+      "DependsOn": "CoreOSClusterSG"
+    },
+    "Ingress2379": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Fn::GetAtt": [
+            "CoreOSClusterSG",
+            "GroupId"
+          ]
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "2379",
+        "ToPort": "2379",
+        "SourceSecurityGroupId": {
+          "Fn::GetAtt": [
+            "CoreOSClusterSG",
+            "GroupId"
+          ]
+        }
+      },
+      "DependsOn": "CoreOSClusterSG"
+    },
+    "Ingress2380": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Fn::GetAtt": [
+            "CoreOSClusterSG",
+            "GroupId"
+          ]
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "2380",
+        "ToPort": "2380",
+        "SourceSecurityGroupId": {
+          "Fn::GetAtt": [
+            "CoreOSClusterSG",
+            "GroupId"
+          ]
+        }
+      },
+      "DependsOn": "CoreOSClusterSG"
+    },
+    "etcdSRVRecord": {
+      "Type": "AWS::Route53::RecordSet",
+      "Properties": {
+        "HostedZoneName": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "DNSHostedZone"
+              },
+              "."
+            ]
+          ]
+        },
+        "Name": {
+          "Fn::Join": [
+            "",
+            [
+              "_etcd-server._tcp.",
+              {
+                "Ref": "DNSHostedZone"
+              },
+              "."
+            ]
+          ]
+        },
+        "Type": "SRV",
+        "TTL": "86400",
+        "ResourceRecords": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "0 0 2380 ",
+                {
+                  "Ref": "ServerOneName"
+                },
+                ".",
+                {
+                  "Ref": "DNSHostedZone"
+                },
+                "."
+              ]
+            ]
+          },
+          {
+            "Fn::Join": [
+              "",
+              [
+                "0 0 2380 ",
+                {
+                  "Ref": "ServerTwoName"
+                },
+                ".",
+                {
+                  "Ref": "DNSHostedZone"
+                },
+                "."
+              ]
+            ]
+          },
+          {
+            "Fn::Join": [
+              "",
+              [
+                "0 0 2380 ",
+                {
+                  "Ref": "ServerThreeName"
+                },
+                ".",
+                {
+                  "Ref": "DNSHostedZone"
+                },
+                "."
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "ServerOneARecord": {
+      "Type": "AWS::Route53::RecordSet",
+      "Properties": {
+        "HostedZoneName": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "DNSHostedZone"
+              },
+              "."
+            ]
+          ]
+        },
+        "Name": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "ServerOneName"
+              },
+              ".",
+              {
+                "Ref": "DNSHostedZone"
+              }
+            ]
+          ]
+        },
+        "Type": "A",
+        "TTL": "86400",
+        "ResourceRecords": [
+          {
+            "Ref": "ServerOneIPAddress"
+          }
+        ]
+      }
+    },
+    "ServerTwoARecord": {
+      "Type": "AWS::Route53::RecordSet",
+      "Properties": {
+        "HostedZoneName": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "DNSHostedZone"
+              },
+              "."
+            ]
+          ]
+        },
+        "Name": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "ServerTwoName"
+              },
+              ".",
+              {
+                "Ref": "DNSHostedZone"
+              },
+              "."
+            ]
+          ]
+        },
+        "Type": "A",
+        "TTL": "86400",
+        "ResourceRecords": [
+          {
+            "Ref": "ServerTwoIPAddress"
+          }
+        ]
+      }
+    },
+    "ServerThreeARecord": {
+      "Type": "AWS::Route53::RecordSet",
+      "Properties": {
+        "HostedZoneName": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "DNSHostedZone"
+              },
+              "."
+            ]
+          ]
+        },
+        "Name": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "ServerThreeName"
+              },
+              ".",
+              {
+                "Ref": "DNSHostedZone"
+              },
+              "."
+            ]
+          ]
+        },
+        "Type": "A",
+        "TTL": "86400",
+        "ResourceRecords": [
+          {
+            "Ref": "ServerThreeIPAddress"
+          }
+        ]
+      }
+    },
+    "CoreOSWorkerAutoScale": {
+      "Type": "AWS::AutoScaling::AutoScalingGroup",
+      "Properties": {
+        "LaunchConfigurationName": {
+          "Ref": "CoreOSWorkerLaunchConfig"
+        },
+        "VPCZoneIdentifier": [
+          {
+            "Ref": "ServerOneSubnet"
+          },
+          {
+            "Ref": "ServerTwoSubnet"
+          },
+          {
+            "Ref": "ServerThreeSubnet"
+          }
+        ],
+        "MinSize": "1",
+        "MaxSize": "10",
+        "DesiredCapacity": {
+          "Ref": "Workers"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "worker",
+            "PropagateAtLaunch": true
+          }
+        ]
+      },
+      "DependsOn": [
+        "ServerOne",
+        "ServerTwo",
+        "ServerThree"
+      ]
+    },
+    "CoreOSWorkerLaunchConfig": {
+      "Type": "AWS::AutoScaling::LaunchConfiguration",
+      "Properties": {
+        "ImageId": {
+          "Fn::FindInMap": [
+            "RegionMap",
+            {
+              "Ref": "AWS::Region"
+            },
+            "AMI"
+          ]
+        },
+        "InstanceType": {
+          "Ref": "InstanceType"
+        },
+        "KeyName": {
+          "Ref": "KeyPair"
+        },
+        "SecurityGroups": [
+          {
+            "Fn::GetAtt": [
+              "CoreOSClusterSG",
+              "GroupId"
+            ]
+          }
+        ],
+        "UserData": {
+          "Fn::Base64": {
+            "Fn::Join": [
+              "",
+              [
+                "#cloud-config\n\n",
+                "coreos:\n",
+                "  etcd2:\n",
+                "    discovery-srv: ",
+                {
+                  "Ref": "DNSHostedZone"
+                },
+                "\n",
+                "    initial-cluster-state: existing\n",
+                "    proxy: on\n",
+                "    listen-client-urls: http://0.0.0.0:2379\n",
+                "  fleet:\n",
+                "    metadata: \"role=worker\"\n",
+                "    etcd_servers: http://localhost:2379\n",
+                "  units:\n",
+                "    - name: etcd2.service\n",
+                "      command: start\n",
+                "    - name: fleet.service\n",
+                "      command: start\n"
+              ]
+            ]
+          }
+        }
+      },
+      "DependsOn": [
+        "ServerOne",
+        "ServerTwo",
+        "ServerThree"
+      ]
+    }
+  }
+}
