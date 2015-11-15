@@ -1,5 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "AWS CloudFormation template that creates a CoreOS service cluster of three servers, and seperate Auto Scaling group for worker instances. Created Security Group and DNS records for service discovery.",
   "Parameters": {
     "InstanceType": {
       "Description": "EC2 HVM instance type (m3.medium, etc).",
