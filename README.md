@@ -7,6 +7,8 @@
 
 The template automates the process of creating the DNS SRV records and A records. Then creates a security group for the cluster, launches three instances to form the service cluster. Finally creating the Auto Scaling group to create the worker instances.
 
+Hope you find this template useful, send me a message if you have any suggestions or feedback.
+
 
 ![coreos-cluster](http://ph2.us/github/coreos-ec2-cloudformation/aws-etcd2-cluster-prod.png)
 
@@ -60,6 +62,11 @@ Launch the stack, take a five minute break...
 
 Edit the Auto Scaling group and spawn more workers...
 ![instances-scaled](http://ph2.us/github/coreos-ec2-cloudformation/aws-instances-scaled.png)
+
+
+## License
+MIT Copyright © [Phillip J. Henslee II](https://github.com/philliphenslee/coreos-ec2-cloudformation/blob/master/LICENSE)
+
 
 
 
