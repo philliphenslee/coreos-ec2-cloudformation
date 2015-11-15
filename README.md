@@ -5,7 +5,7 @@
 [CoreOS](https://coreos.com) provides excellent documentation which allows you to get up and running quickly with the stack available on the CoreOS site. I wanted to use DNS for service discovery, while having the ability to scale the worker/minion nodes independently.
 
 
-The template automates the process of creating the DNS SRV records and A records. Then creates a security group for the cluster, launches three instances to form the service cluster. Finally creating the Auto Scaling group to create the worker instances.
+The template automates the process of creating the DNS SRV records and A records. Then creates a security group for the cluster and it launches three instances to form the service cluster. Finally, creating the Auto Scaling group to create the worker instances.
 
 Hope you find this template useful, send me a message if you have any suggestions or feedback.
 
