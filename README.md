@@ -7,6 +7,8 @@
 
 The template automates the process of creating the DNS SRV records and A records. Then creates a security group for the cluster and it launches three instances to form the service cluster. Finally, creating the Auto Scaling group to create the worker instances.
 
+The template is using the stable channel AMI image for all regions (CoreOS-stable-766.5.0-hvm). 
+
 Hope you find this template useful, send me a message if you have any suggestions or feedback.
 
 
