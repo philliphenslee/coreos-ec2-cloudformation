@@ -512,6 +512,22 @@
               "Ref": "AllowSSHFrom"
             }
           }
+        ],
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Ref": "AWS::StackName"
+                  },
+                  "-CoreOS-SG"
+                ]
+              ]
+            }
+          }
         ]
       }
     },
