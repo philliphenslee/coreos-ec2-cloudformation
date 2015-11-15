@@ -31,17 +31,9 @@ Download the JSON template file, or clone the git repo.
 git clone https://github.com/philliphenslee/coreos-ec2-cloudformation.git
 ```
 
-
-
-
-
 Use an existing Route53 private DNS Zone, or create a new one...
 
 ![DNS](http://ph2.us/github/coreos-ec2-cloudformation/aws-dns-zone.png)
-
-
-
-
 
 
 Upload the file to CloudFormation and create the stack...
@@ -49,17 +41,9 @@ Upload the file to CloudFormation and create the stack...
 ![template](http://ph2.us/github/coreos-ec2-cloudformation/aws-cf-designer.png)
 
 
-
-
-
-
 Enter the stack name and the required parameters...
 
 ![params](http://ph2.us/github/coreos-ec2-cloudformation/aws-cf-parameters.png)
-
-
-
-
 
 
 Launch the stack, take a five minute break...
@@ -67,12 +51,8 @@ Launch the stack, take a five minute break...
 ![instances](http://ph2.us/github/coreos-ec2-cloudformation/aws-instances.png)
 
 
-
-
-
 Edit the Auto Scaling group and spawn more workers...
 ![instances-scaled](http://ph2.us/github/coreos-ec2-cloudformation/aws-instances-scaled.png)
-
 
 ## License
 MIT Copyright © [Phillip J. Henslee II](https://github.com/philliphenslee/coreos-ec2-cloudformation/blob/master/LICENSE)
