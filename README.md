@@ -15,13 +15,31 @@ CoreOS provides excellent documentation, and you can get up and running quickly 
 * Key Pair
 
 ### Using the template
+Download the JSON template file, or clone the git repo. 
 
 ```shell
 git clone https://github.com/philliphenslee/coreos-ec2-cloudformation.git
 ```
 
-![template](http://ph2.us/github/coreos-ec2-cloudformation/aws-coreos-designer.png)
 
+
+Use and existing Route53 private DNS Zone, or create a new one..
+
+![DNS](http://ph2.us/github/coreos-ec2-cloudformation/aws-dns-zone.png)
+
+
+
+
+Open the file in CloudFormation, and then click "Create Stack". 
+
+![template](http://ph2.us/github/coreos-ec2-cloudformation/aws-cf-designer.png)
+
+
+
+
+Enter the required parameters...
+
+![params](http://ph2.us/github/coreos-ec2-cloudformation/aws-cf-parameters.png)
 
 
 
