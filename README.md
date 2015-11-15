@@ -2,7 +2,7 @@
 **AWS CloudFormation template for running CoreOS etcd clusters on EC2.**
  
 ### Overview
-CoreOS provides excellent documentation, and you can get up and running quickly with the stack available on the CoreOS site. In a quest to use DNS for service discovery, and have the ability to scale my worker/minion nodes independently, I created a CloudFormation template. The template creates a three node service cluster, and creates an auto scale group for the worker instances.
+[CoreOS](https://coreos.com) provides excellent documentation, and you can get up and running quickly with the stack available on the CoreOS site. In a quest to use DNS for service discovery, and have the ability to scale my worker/minion nodes independently.
 
 
 The template automates the process of creating the DNS SRV records and A records. Then creates a security group for the cluster, launches three instances to form the service cluster. Finally creating the Auto Scaling group to create the worker instances.
@@ -14,7 +14,7 @@ The template automates the process of creating the DNS SRV records and A records
 #### Required AWS Resources
 
 * VPC
-* Multiple Subnets
+* Subnet(s)
 * Route53 Hosted Zone (private)
 * Key Pair
 
