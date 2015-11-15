@@ -26,6 +26,24 @@ Learn more about the CoreOS cluster architecture here...
 * Route53 Hosted Zone (private)
 * Key Pair
 
+### Template Parameters
+* AllowSSHFrom (default 0.0.0.0/0)
+* DNSHostedZone 
+* InstanceType
+* KeyPair
+* Server1Name
+* Server1IP
+* Server1Subnet
+* Server2Name
+* Server2IP
+* Server2Subnet
+* Server3Name
+* Server3IP
+* Server3Subnet
+* VpcId
+* WorkerCount
+
+
 ### Using the template
 Download the JSON template file, or clone the git repo. 
 

@@ -248,9 +248,9 @@
       },
       "DependsOn": [
         "etcdSRVRecord",
-        "ServerOneARecord",
-        "ServerTwoARecord",
-        "ServerThreeARecord"
+        "Server1ARecord",
+        "Server2ARecord",
+        "Server3ARecord"
       ]
     },
     "Server2": {
@@ -370,9 +370,9 @@
       },
       "DependsOn": [
         "etcdSRVRecord",
-        "ServerOneARecord",
-        "ServerTwoARecord",
-        "ServerThreeARecord"
+        "Server1ARecord",
+        "Server2ARecord",
+        "Server3ARecord"
       ]
     },
     "Server3": {
@@ -492,9 +492,9 @@
       },
       "DependsOn": [
         "etcdSRVRecord",
-        "ServerOneARecord",
-        "ServerTwoARecord",
-        "ServerThreeARecord"
+        "Server1ARecord",
+        "Server2ARecord",
+        "Server3ARecord"
       ]
     },
     "CoreOSClusterSG": {
@@ -819,9 +819,9 @@
         ]
       },
       "DependsOn": [
-        "ServerOne",
-        "ServerTwo",
-        "ServerThree"
+        "Server1",
+        "Server2",
+        "Server3"
       ]
     },
     "CoreOSWorkerLaunchConfig": {
@@ -880,9 +880,9 @@
         }
       },
       "DependsOn": [
-        "ServerOne",
-        "ServerTwo",
-        "ServerThree"
+        "Server1",
+        "Server2",
+        "Server3"
       ]
     }
   }
