@@ -40,7 +40,7 @@
       "Type": "AWS::EC2::VPC::Id"
     },
     "DNSHostedZone": {
-      "Description": "The name of the Route53 private DNS zone (example.com.).",
+      "Description": "The name of the Route53 private DNS zone (example.com).",
       "Type": "String"
     },
     "KeyPair": {
