@@ -10,7 +10,8 @@ The template automates the process of creating the DNS SRV records and A records
 
 ![coreos-cluster](http://ph2.us/github/coreos-ec2-cloudformation/aws-etcd2-cluster-prod.png)
 
-Learn more about the CoreOS Cluster Architecture here...
+Learn more about the CoreOS cluster architecture here...
+
 [https://coreos.com/os/docs/latest/cluster-architectures.html](https://coreos.com/os/docs/latest/cluster-architectures.html)
 
 
