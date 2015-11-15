@@ -41,7 +41,8 @@
     },
     "DNSHostedZone": {
       "Description": "The name of the Route53 private DNS zone (example.com).",
-      "Type": "String"
+      "Type": "String",
+      "Default": "example.com"
     },
     "KeyPair": {
       "Description": "The key pair to allow SSH access...",
@@ -88,7 +89,8 @@
     },
     "Workers": {
       "Description": "The initial number of worker or minions",
-      "Type": "String"
+      "Type": "String",
+      "Default": "3"
     },
     "AllowSSHFrom": {
       "Description": "The net block (CIDR) that SSH is available to.",
