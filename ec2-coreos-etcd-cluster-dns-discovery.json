@@ -2,6 +2,11 @@
   "AWSTemplateFormatVersion": "2010-09-09",
   "Description": "AWS CloudFormation template that creates a CoreOS service cluster of three servers, and separate Auto Scaling group for worker instances. Creates cluster Security Group and DNS records for service discovery.",
   "Parameters": {
+    "AllowSSHFrom": {
+      "Description": "The net block (CIDR) that SSH is available to.",
+      "Default": "0.0.0.0/0",
+      "Type": "String"
+    },
     "InstanceType": {
       "Description": "EC2 HVM instance type (m3.medium, etc).",
       "Type": "String",
@@ -36,10 +41,6 @@
       ],
       "ConstraintDescription": "Must be a valid EC2 HVM instance type."
     },
-    "VpcId": {
-      "Description": "The VPC Id",
-      "Type": "AWS::EC2::VPC::Id"
-    },
     "DNSHostedZone": {
       "Description": "The name of the Route53 private DNS zone (example.com).",
       "Type": "String",
@@ -49,54 +50,53 @@
       "Description": "The key pair to allow SSH access...",
       "Type": "AWS::EC2::KeyPair::KeyName"
     },
-    "ServerOneName": {
+    "Server1Name": {
       "Description": "The name of the first server in the cluster",
       "Type": "String",
       "Default": "etcd1"
     },
-    "ServerOneIPAddress": {
+    "Server1IP": {
       "Description": "The static IP address of server one.",
       "Type": "String"
     },
-    "ServerOneSubnet": {
+    "Server1Subnet": {
       "Description": "The designated subnet id for server one.",
       "Type": "AWS::EC2::Subnet::Id"
     },
-    "ServerTwoName": {
+    "Server2Name": {
       "Description": "The name of the second server in the cluster",
       "Type": "String",
       "Default": "etcd2"
     },
-    "ServerTwoIPAddress": {
+    "Server2IP": {
       "Description": "The static IP address of server two.",
       "Type": "String"
     },
-    "ServerTwoSubnet": {
+    "Server2Subnet": {
       "Description": "The designated subnet id for server two.",
       "Type": "AWS::EC2::Subnet::Id"
     },
-    "ServerThreeName": {
+    "Server3Name": {
       "Description": "The name of the third server in the cluster",
       "Type": "String",
       "Default": "etcd3"
     },
-    "ServerThreeIPAddress": {
+    "Server3IP": {
       "Description": "The static IP address of server three.",
       "Type": "String"
     },
-    "ServerThreeSubnet": {
+    "Server3Subnet": {
       "Description": "The designated subnet id for server three.",
       "Type": "AWS::EC2::Subnet::Id"
     },
-    "Workers": {
-      "Description": "The initial number of worker or minions",
+    "WorkerCount": {
+      "Description": "The initial number of worker or minion instances",
       "Type": "String",
       "Default": "3"
     },
-    "AllowSSHFrom": {
-      "Description": "The net block (CIDR) that SSH is available to.",
-      "Default": "0.0.0.0/0",
-      "Type": "String"
+    "VpcId": {
+      "Description": "The VPC Id",
+      "Type": "AWS::EC2::VPC::Id"
     }
   },
   "Mappings": {
@@ -131,7 +131,7 @@
     }
   },
   "Resources": {
-    "ServerOne": {
+    "Server1": {
       "Type": "AWS::EC2::Instance",
       "Properties": {
         "InstanceType": {
@@ -150,10 +150,10 @@
           "Ref": "KeyPair"
         },
         "PrivateIpAddress": {
-          "Ref": "ServerOneIPAddress"
+          "Ref": "Server1IP"
         },
         "SubnetId": {
-          "Ref": "ServerOneSubnet"
+          "Ref": "Server1Subnet"
         },
         "SecurityGroupIds": [
           {
@@ -171,7 +171,7 @@
                 "",
                 [
                   {
-                    "Ref": "ServerOneName"
+                    "Ref": "Server1Name"
                   },
                   ".",
                   {
@@ -192,7 +192,7 @@
                 "  etcd2:\n",
                 "    name: ",
                 {
-                  "Ref": "ServerOneName"
+                  "Ref": "Server1Name"
                 },
                 "\n",
                 "    discovery-srv: ",
@@ -202,7 +202,7 @@
                 "\n",
                 "    advertise-client-urls: http://",
                 {
-                  "Ref": "ServerOneName"
+                  "Ref": "Server1Name"
                 },
                 ".",
                 {
@@ -211,7 +211,7 @@
                 ":2379\n",
                 "    initial-advertise-peer-urls: http://",
                 {
-                  "Ref": "ServerOneName"
+                  "Ref": "Server1Name"
                 },
                 ".",
                 {
@@ -226,7 +226,7 @@
                 "    listen-client-urls: http://0.0.0.0:2379,http://0.0.0.0:4001\n",
                 "    listen-peer-urls: http://",
                 {
-                  "Ref": "ServerOneName"
+                  "Ref": "Server1Name"
                 },
                 ".",
                 {
@@ -253,7 +253,7 @@
         "ServerThreeARecord"
       ]
     },
-    "ServerTwo": {
+    "Server2": {
       "Type": "AWS::EC2::Instance",
       "Properties": {
         "InstanceType": {
@@ -272,10 +272,10 @@
           "Ref": "KeyPair"
         },
         "PrivateIpAddress": {
-          "Ref": "ServerTwoIPAddress"
+          "Ref": "Server2IP"
         },
         "SubnetId": {
-          "Ref": "ServerTwoSubnet"
+          "Ref": "Server2Subnet"
         },
         "SecurityGroupIds": [
           {
@@ -293,7 +293,7 @@
                 "",
                 [
                   {
-                    "Ref": "ServerTwoName"
+                    "Ref": "Server2Name"
                   },
                   ".",
                   {
@@ -314,7 +314,7 @@
                 "  etcd2:\n",
                 "    name: ",
                 {
-                  "Ref": "ServerTwoName"
+                  "Ref": "Server2Name"
                 },
                 "\n",
                 "    discovery-srv: ",
@@ -324,7 +324,7 @@
                 "\n",
                 "    advertise-client-urls: http://",
                 {
-                  "Ref": "ServerTwoName"
+                  "Ref": "Server2Name"
                 },
                 ".",
                 {
@@ -338,7 +338,7 @@
                 "\n    initial-cluster-state: new\n",
                 "    initial-advertise-peer-urls: http://",
                 {
-                  "Ref": "ServerTwoName"
+                  "Ref": "Server2Name"
                 },
                 ".",
                 {
@@ -348,7 +348,7 @@
                 "    listen-client-urls: http://0.0.0.0:2379,http://0.0.0.0:4001\n",
                 "    listen-peer-urls: http://",
                 {
-                  "Ref": "ServerTwoName"
+                  "Ref": "Server2Name"
                 },
                 ".",
                 {
@@ -375,7 +375,7 @@
         "ServerThreeARecord"
       ]
     },
-    "ServerThree": {
+    "Server3": {
       "Type": "AWS::EC2::Instance",
       "Properties": {
         "InstanceType": {
@@ -394,10 +394,10 @@
           "Ref": "KeyPair"
         },
         "PrivateIpAddress": {
-          "Ref": "ServerThreeIPAddress"
+          "Ref": "Server3IP"
         },
         "SubnetId": {
-          "Ref": "ServerThreeSubnet"
+          "Ref": "Server3Subnet"
         },
         "SecurityGroupIds": [
           {
@@ -415,7 +415,7 @@
                 "",
                 [
                   {
-                    "Ref": "ServerThreeName"
+                    "Ref": "Server3Name"
                   },
                   ".",
                   {
@@ -436,7 +436,7 @@
                 "  etcd2:\n",
                 "    name: ",
                 {
-                  "Ref": "ServerThreeName"
+                  "Ref": "Server3Name"
                 },
                 "\n",
                 "    discovery-srv: ",
@@ -446,7 +446,7 @@
                 "\n",
                 "    advertise-client-urls: http://",
                 {
-                  "Ref": "ServerThreeName"
+                  "Ref": "Server3Name"
                 },
                 ".",
                 {
@@ -460,7 +460,7 @@
                 "\n    initial-cluster-state: new\n",
                 "    initial-advertise-peer-urls: http://",
                 {
-                  "Ref": "ServerThreeName"
+                  "Ref": "Server3Name"
                 },
                 ".",
                 {
@@ -470,7 +470,7 @@
                 "    listen-client-urls: http://0.0.0.0:2379,http://0.0.0.0:4001\n",
                 "    listen-peer-urls: http://",
                 {
-                  "Ref": "ServerThreeName"
+                  "Ref": "Server3Name"
                 },
                 ".",
                 {
@@ -630,7 +630,7 @@
               [
                 "0 0 2380 ",
                 {
-                  "Ref": "ServerOneName"
+                  "Ref": "Server1Name"
                 },
                 ".",
                 {
@@ -646,7 +646,7 @@
               [
                 "0 0 2380 ",
                 {
-                  "Ref": "ServerTwoName"
+                  "Ref": "Server2Name"
                 },
                 ".",
                 {
@@ -662,7 +662,7 @@
               [
                 "0 0 2380 ",
                 {
-                  "Ref": "ServerThreeName"
+                  "Ref": "Server3Name"
                 },
                 ".",
                 {
@@ -675,7 +675,7 @@
         ]
       }
     },
-    "ServerOneARecord": {
+    "Server1ARecord": {
       "Type": "AWS::Route53::RecordSet",
       "Properties": {
         "HostedZoneName": {
@@ -694,7 +694,7 @@
             "",
             [
               {
-                "Ref": "ServerOneName"
+                "Ref": "Server1Name"
               },
               ".",
               {
@@ -707,12 +707,12 @@
         "TTL": "86400",
         "ResourceRecords": [
           {
-            "Ref": "ServerOneIPAddress"
+            "Ref": "Server1IP"
           }
         ]
       }
     },
-    "ServerTwoARecord": {
+    "Server2ARecord": {
       "Type": "AWS::Route53::RecordSet",
       "Properties": {
         "HostedZoneName": {
@@ -731,7 +731,7 @@
             "",
             [
               {
-                "Ref": "ServerTwoName"
+                "Ref": "Server2Name"
               },
               ".",
               {
@@ -745,12 +745,12 @@
         "TTL": "86400",
         "ResourceRecords": [
           {
-            "Ref": "ServerTwoIPAddress"
+            "Ref": "Server2IP"
           }
         ]
       }
     },
-    "ServerThreeARecord": {
+    "Server3ARecord": {
       "Type": "AWS::Route53::RecordSet",
       "Properties": {
         "HostedZoneName": {
@@ -769,7 +769,7 @@
             "",
             [
               {
-                "Ref": "ServerThreeName"
+                "Ref": "Server3Name"
               },
               ".",
               {
@@ -783,7 +783,7 @@
         "TTL": "86400",
         "ResourceRecords": [
           {
-            "Ref": "ServerThreeIPAddress"
+            "Ref": "Server3IP"
           }
         ]
       }
@@ -796,19 +796,19 @@
         },
         "VPCZoneIdentifier": [
           {
-            "Ref": "ServerOneSubnet"
+            "Ref": "Server1Subnet"
           },
           {
-            "Ref": "ServerTwoSubnet"
+            "Ref": "Server2Subnet"
           },
           {
-            "Ref": "ServerThreeSubnet"
+            "Ref": "Server3Subnet"
           }
         ],
         "MinSize": "1",
         "MaxSize": "12",
         "DesiredCapacity": {
-          "Ref": "Workers"
+          "Ref": "WorkerCount"
         },
         "Tags": [
           {
