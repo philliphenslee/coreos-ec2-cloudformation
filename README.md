@@ -33,9 +33,13 @@ git clone https://github.com/philliphenslee/coreos-ec2-cloudformation.git
 
 
 
+
+
 Use an existing Route53 private DNS Zone, or create a new one...
 
 ![DNS](http://ph2.us/github/coreos-ec2-cloudformation/aws-dns-zone.png)
+
+
 
 
 
@@ -47,6 +51,8 @@ Upload the file to CloudFormation and create the stack...
 
 
 
+
+
 Enter the stack name and the required parameters...
 
 ![params](http://ph2.us/github/coreos-ec2-cloudformation/aws-cf-parameters.png)
@@ -54,9 +60,13 @@ Enter the stack name and the required parameters...
 
 
 
+
+
 Launch the stack, take a five minute break...
 
 ![instances](http://ph2.us/github/coreos-ec2-cloudformation/aws-instances.png)
+
+
 
 
 
