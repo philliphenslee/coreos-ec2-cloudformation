@@ -44,9 +44,8 @@
       "Type": "String"
     },
     "KeyPair": {
-      "Default": "your-key-pair",
-      "Description": "The name of an EC2 Key Pair to allow SSH access to the instance.",
-      "Type": "String"
+      "Description": "The key pair to allow SSH access...",
+      "Type": "AWS::EC2::KeyPair::KeyName"
     },
     "ServerOneName": {
       "Description": "The name of the first server in the cluster",
