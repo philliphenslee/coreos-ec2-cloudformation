@@ -31,6 +31,7 @@ Learn more about the CoreOS cluster architecture here...
 * DNSHostedZone 
 * InstanceType
 * KeyPair
+* RootVolumeSize
 * Server1Name
 * Server1IP
 * Server1Subnet
@@ -72,6 +73,8 @@ Launch the stack, take a five minute break...
 
 
 Edit the Auto Scaling group and spawn more workers...
+  
+  
 ![instances-scaled](http://ph2.us/github/coreos-ec2-cloudformation/aws-instances-scaled.png)
 
 ## License
