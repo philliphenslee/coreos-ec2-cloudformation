@@ -53,7 +53,7 @@
     "RootVolumeSize": {
       "Description": "The desired size of the root volume",
       "Type": "Number",
-      "MinValue": "8",
+      "MinValue": "5",
       "MaxValue": "30",
       "Default": "10"
     },
