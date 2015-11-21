@@ -50,6 +50,13 @@
       "Description": "The key pair to allow SSH access...",
       "Type": "AWS::EC2::KeyPair::KeyName"
     },
+    "RootVolumeSize": {
+      "Description": "The desired size of the root volume",
+      "Type": "Number",
+      "MinValue": "8",
+      "MaxValue": "30",
+      "Default": "10"
+    },
     "Server1Name": {
       "Description": "The name of the first server in the cluster",
       "Type": "String",
@@ -149,6 +156,15 @@
         "KeyName": {
           "Ref": "KeyPair"
         },
+        "BlockDeviceMappings" : [
+          {
+            "DeviceName" : "/dev/sda1",
+            "Ebs" : {
+              "VolumeSize" : {"Ref": "RootVolumeSize"},
+              "VolumeType": "gp2"
+            }
+          }
+        ],
         "PrivateIpAddress": {
           "Ref": "Server1IP"
         },
@@ -271,6 +287,15 @@
         "KeyName": {
           "Ref": "KeyPair"
         },
+        "BlockDeviceMappings" : [
+          {
+            "DeviceName" : "/dev/sda1",
+            "Ebs" : {
+              "VolumeSize" : {"Ref": "RootVolumeSize"},
+              "VolumeType": "gp2"
+            }
+          }
+        ],
         "PrivateIpAddress": {
           "Ref": "Server2IP"
         },
@@ -393,6 +418,15 @@
         "KeyName": {
           "Ref": "KeyPair"
         },
+        "BlockDeviceMappings" : [
+          {
+            "DeviceName" : "/dev/sda1",
+            "Ebs" : {
+              "VolumeSize" : {"Ref": "RootVolumeSize"},
+              "VolumeType": "gp2"
+            }
+          }
+        ],
         "PrivateIpAddress": {
           "Ref": "Server3IP"
         },
@@ -842,6 +876,15 @@
         "KeyName": {
           "Ref": "KeyPair"
         },
+        "BlockDeviceMappings" : [
+          {
+            "DeviceName" : "/dev/sda1",
+            "Ebs" : {
+              "VolumeSize" : {"Ref": "RootVolumeSize"},
+              "VolumeType": "gp2"
+            }
+          }
+        ],
         "SecurityGroups": [
           {
             "Fn::GetAtt": [
