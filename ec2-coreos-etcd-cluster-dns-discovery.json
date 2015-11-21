@@ -156,11 +156,13 @@
         "KeyName": {
           "Ref": "KeyPair"
         },
-        "BlockDeviceMappings" : [
+        "BlockDeviceMappings": [
           {
-            "DeviceName" : "/dev/sda1",
-            "Ebs" : {
-              "VolumeSize" : {"Ref": "RootVolumeSize"},
+            "DeviceName": "/dev/sda1",
+            "Ebs": {
+              "VolumeSize": {
+                "Ref": "RootVolumeSize"
+              },
               "VolumeType": "gp2"
             }
           }
@@ -204,6 +206,11 @@
               "",
               [
                 "#cloud-config\n\n",
+                "hostname: \"",
+                {
+                  "Ref": "Server1Name"
+                },
+                "\"\n",
                 "coreos:\n",
                 "  etcd2:\n",
                 "    name: ",
@@ -287,11 +294,13 @@
         "KeyName": {
           "Ref": "KeyPair"
         },
-        "BlockDeviceMappings" : [
+        "BlockDeviceMappings": [
           {
-            "DeviceName" : "/dev/sda1",
-            "Ebs" : {
-              "VolumeSize" : {"Ref": "RootVolumeSize"},
+            "DeviceName": "/dev/sda1",
+            "Ebs": {
+              "VolumeSize": {
+                "Ref": "RootVolumeSize"
+              },
               "VolumeType": "gp2"
             }
           }
@@ -335,6 +344,11 @@
               "",
               [
                 "#cloud-config\n\n",
+                "hostname: \"",
+                {
+                  "Ref": "Server2Name"
+                },
+                "\"\n",
                 "coreos:\n",
                 "  etcd2:\n",
                 "    name: ",
@@ -418,11 +432,13 @@
         "KeyName": {
           "Ref": "KeyPair"
         },
-        "BlockDeviceMappings" : [
+        "BlockDeviceMappings": [
           {
-            "DeviceName" : "/dev/sda1",
-            "Ebs" : {
-              "VolumeSize" : {"Ref": "RootVolumeSize"},
+            "DeviceName": "/dev/sda1",
+            "Ebs": {
+              "VolumeSize": {
+                "Ref": "RootVolumeSize"
+              },
               "VolumeType": "gp2"
             }
           }
@@ -466,6 +482,11 @@
               "",
               [
                 "#cloud-config\n\n",
+                "hostname: \"",
+                {
+                  "Ref": "Server3Name"
+                },
+                "\"\n",
                 "coreos:\n",
                 "  etcd2:\n",
                 "    name: ",
@@ -876,11 +897,13 @@
         "KeyName": {
           "Ref": "KeyPair"
         },
-        "BlockDeviceMappings" : [
+        "BlockDeviceMappings": [
           {
-            "DeviceName" : "/dev/sda1",
-            "Ebs" : {
-              "VolumeSize" : {"Ref": "RootVolumeSize"},
+            "DeviceName": "/dev/sda1",
+            "Ebs": {
+              "VolumeSize": {
+                "Ref": "RootVolumeSize"
+              },
               "VolumeType": "gp2"
             }
           }
