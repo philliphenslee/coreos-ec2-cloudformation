@@ -53,9 +53,9 @@
     "RootVolumeSize": {
       "Description": "The desired size of the root volume",
       "Type": "Number",
-      "MinValue": "5",
-      "MaxValue": "30",
-      "Default": "10"
+      "MinValue": "8",
+      "MaxValue": "50",
+      "Default": "8"
     },
     "Server1Name": {
       "Description": "The name of the first server in the cluster",
@@ -158,7 +158,7 @@
         },
         "BlockDeviceMappings": [
           {
-            "DeviceName": "/dev/sda1",
+            "DeviceName": "/dev/xvda",
             "Ebs": {
               "VolumeSize": {
                 "Ref": "RootVolumeSize"
@@ -210,7 +210,7 @@
                 {
                   "Ref": "Server1Name"
                 },
-                "\"\n",
+                "\"\n\n",
                 "coreos:\n",
                 "  etcd2:\n",
                 "    name: ",
@@ -296,7 +296,7 @@
         },
         "BlockDeviceMappings": [
           {
-            "DeviceName": "/dev/sda1",
+            "DeviceName": "/dev/xvda",
             "Ebs": {
               "VolumeSize": {
                 "Ref": "RootVolumeSize"
@@ -348,7 +348,7 @@
                 {
                   "Ref": "Server2Name"
                 },
-                "\"\n",
+                "\"\n\n",
                 "coreos:\n",
                 "  etcd2:\n",
                 "    name: ",
@@ -434,7 +434,7 @@
         },
         "BlockDeviceMappings": [
           {
-            "DeviceName": "/dev/sda1",
+            "DeviceName": "/dev/xvda",
             "Ebs": {
               "VolumeSize": {
                 "Ref": "RootVolumeSize"
@@ -486,7 +486,7 @@
                 {
                   "Ref": "Server3Name"
                 },
-                "\"\n",
+                "\"\n\n",
                 "coreos:\n",
                 "  etcd2:\n",
                 "    name: ",
@@ -899,7 +899,7 @@
         },
         "BlockDeviceMappings": [
           {
-            "DeviceName": "/dev/sda1",
+            "DeviceName": "/dev/xvda",
             "Ebs": {
               "VolumeSize": {
                 "Ref": "RootVolumeSize"
